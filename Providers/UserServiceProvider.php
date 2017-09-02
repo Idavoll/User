@@ -22,6 +22,7 @@ use Modules\User\Repositories\RoleRepository;
 use Modules\User\Repositories\UserRepository;
 use Modules\User\Repositories\UserTokenRepository;
 use Modules\User\Guards\Sentinel;
+use Modules\Workshop\Manager\StylistThemeManager;
 
 class UserServiceProvider extends ServiceProvider
 {
@@ -70,13 +71,18 @@ class UserServiceProvider extends ServiceProvider
 
     /**
      */
-    public function boot()
+    public function boot(StylistThemeManager $theme)
     {
         $this->registerMiddleware();
 
         $this->publishes([
             __DIR__ . '/../Resources/views' => base_path('resources/views/asgard/user'),
         ]);
+
+        $this->app['view']->prependNamespace(
+            'user',
+            $theme->find(config('asgard.core.core.admin-theme'))->getPath() . '/views/modules/user'
+        );
 
         $this->publishConfig('user', 'permissions');
         $this->publishConfig('user', 'config');
