@@ -125,7 +125,7 @@ class SentinelAuthentication implements Authentication
      */
     public function hasAccess($permission)
     {
-        if (! Sentinel::check()) {
+        if (Sentinel::guest()) {
             return false;
         }
 
@@ -138,9 +138,8 @@ class SentinelAuthentication implements Authentication
      */
     public function check()
     {
-        $user = Sentinel::check();
-
-        if ($user) {
+        
+        if (! Sentinel::guest()) {
             return true;
         }
 
